@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://t8dsuw8bg6d1"]
+
+[ext_resource type="Texture2D" uid="uid://bvnjnadightog" path="res://Sprites/Characters/NoseCat.png" id="1_lqkeb"]
+[ext_resource type="Script" path="res://Entity Scenes/CharacterBody.cs" id="1_tgmwh"]
+[ext_resource type="PackedScene" uid="uid://dj68capos6llb" path="res://Entity Scenes/GunRoot.tscn" id="3_7bl7q"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fhnf"]
+size = Vector2(61, 57)
+
+[node name="PlayerRoot" type="Node2D"]
+
+[node name="CharacterBody" type="CharacterBody2D" parent="."]
+texture_filter = 1
+slide_on_ceiling = false
+floor_stop_on_slope = false
+script = ExtResource("1_tgmwh")
+
+[node name="NoseCat" type="Sprite2D" parent="CharacterBody"]
+texture = ExtResource("1_lqkeb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody"]
+shape = SubResource("RectangleShape2D_5fhnf")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody"]
+process_callback = 0
+position_smoothing_enabled = true
+
+[node name="JumpBuffer" type="Timer" parent="CharacterBody"]
+wait_time = 0.1
+one_shot = true
+
+[node name="CoyoteJump" type="Timer" parent="CharacterBody"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Label" type="Label" parent="CharacterBody"]
+offset_left = -183.0
+offset_top = -141.0
+offset_right = -143.0
+offset_bottom = -118.0
+
+[node name="GunRoot" parent="CharacterBody" instance=ExtResource("3_7bl7q")]
+
+[connection signal="timeout" from="CharacterBody/JumpBuffer" to="CharacterBody" method="_on_jump_buffer_timeout"]
+[connection signal="timeout" from="CharacterBody/CoyoteJump" to="CharacterBody" method="_on_coyote_jump_timeout"]

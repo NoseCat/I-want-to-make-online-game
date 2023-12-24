@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://7ajymaupfls2"]
+
+[ext_resource type="Script" path="res://Entity Scenes/boolet.cs" id="1_aqs5e"]
+[ext_resource type="Texture2D" uid="uid://dfekc8wplfe53" path="res://Sprites/Guns/Bullet.png" id="2_yl836"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6jgdr"]
+size = Vector2(16, 16)
+
+[node name="Boolet" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 2
+gravity_scale = 0.0
+linear_damp_mode = 1
+script = ExtResource("1_aqs5e")
+
+[node name="Rock" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_yl836")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6jgdr")
+
+[node name="LifeTime" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+autostart = true

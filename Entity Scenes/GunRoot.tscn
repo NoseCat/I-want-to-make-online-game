@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj68capos6llb"]
+
+[ext_resource type="Script" path="res://Entity Scenes/GunRoot.cs" id="1_xyjma"]
+[ext_resource type="PackedScene" uid="uid://7ajymaupfls2" path="res://Entity Scenes/boolet.tscn" id="2_dsv3f"]
+[ext_resource type="Texture2D" uid="uid://dnl6kpdre6vxn" path="res://Sprites/Guns/Pistol.png" id="3_i713x"]
+
+[node name="GunRoot" type="Node2D"]
+script = ExtResource("1_xyjma")
+BulletScene = ExtResource("2_dsv3f")
+BulletSpeed = 600.0
+
+[node name="Gun" type="Sprite2D" parent="."]
+texture = ExtResource("3_i713x")
+offset = Vector2(20, 0)
