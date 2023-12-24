@@ -11,7 +11,6 @@ public partial class GunRoot : Node2D
 	public Node2D Parent; 
 	[Export] PackedScene BulletScene;
 	[Export] float BulletSpeed = 300;
-	[Export] uint BulletRange = 200;
 	public override void _Ready()
 	{
 		Parent = GetNode<Node2D>("..");
@@ -39,10 +38,9 @@ public partial class GunRoot : Node2D
 		{
 			RigidBody2D bullet = BulletScene.Instantiate<RigidBody2D>();
 			bullet.GlobalPosition = Marker.GlobalPosition;
-			((boolet)bullet).SpriteRotation = GlobalRotation;
+			//((boolet)bullet).SpriteRotation = GlobalRotation;
 			((boolet)bullet).motion = Mouse - bullet.Position; //this took ages...
 			((boolet)bullet).speed = BulletSpeed;
-			((boolet)bullet).range_limit = BulletRange;
 			GetTree().Root.AddChild(bullet);
 		}
 	}

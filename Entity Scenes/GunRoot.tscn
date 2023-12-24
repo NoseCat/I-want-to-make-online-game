@@ -8,7 +8,7 @@
 scale = Vector2(2, 2)
 script = ExtResource("1_xyjma")
 BulletScene = ExtResource("2_dsv3f")
-BulletSpeed = 600.0
+BulletSpeed = 1000.0
 
 [node name="Gun" type="Sprite2D" parent="."]
 position = Vector2(13.5, 0)

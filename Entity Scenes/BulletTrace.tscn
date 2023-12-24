@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://b5g35sj8ro1ie"]
+
+[ext_resource type="Script" path="res://Entity Scenes/BulletTrace.cs" id="1_royql"]
+
+[sub_resource type="Curve" id="Curve_5tocf"]
+_data = [Vector2(0, 0), 0.0, -0.0732986, 0, 0, Vector2(1, 1), 0.138157, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_u1wxo"]
+colors = PackedColorArray(1, 0.286275, 0.25098, 1, 1, 0.835294, 0.254902, 1)
+
+[node name="Line2D" type="Line2D"]
+z_index = -1
+width_curve = SubResource("Curve_5tocf")
+gradient = SubResource("Gradient_u1wxo")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("1_royql")
