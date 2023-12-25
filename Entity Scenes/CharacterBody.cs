@@ -34,7 +34,7 @@ public partial class CharacterBody : CharacterBody2D
 			float JumpControl = gravity;
 			if (Input.IsActionPressed("Jump"))
 			{
-				JumpControl = gravity/2;	
+				JumpControl = gravity/1.5f;	
 			}
             if (velocity.Y > -250)
             {
@@ -90,7 +90,7 @@ public partial class CharacterBody : CharacterBody2D
 			velocity.X -= Math.Sign(velocity.X) * friction;
 
 		//other
-		GetNode<Label>("Label").Text ="FirstJump " + FirstJump + "\nSecondJump " + SecondJump + "\nIsOnFloor() " + IsOnFloor();//"Coyote: " + Coyote + "\nCoyoteFix: " + CoyoteFix;
+		//GetNode<Label>("Label").Text ="FirstJump " + FirstJump + "\nSecondJump " + SecondJump + "\nIsOnFloor() " + IsOnFloor();//"Coyote: " + Coyote + "\nCoyoteFix: " + CoyoteFix;
 
 		Velocity = velocity;
 		MoveAndSlide();
