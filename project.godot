@@ -14,6 +14,10 @@ config/name="ZhWOnlineTest"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://Sprites/Characters/icon.svg"
 
+[autoload]
+
+GameManager="*res://Levels and menus/GameManager.cs"
+
 [dotnet]
 
 project/assembly_name="ZhWOnlineTest"

@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://gqclmyo2obb4"]
+
+[ext_resource type="Script" path="res://Levels and menus/MultiPlayerController.cs" id="1_br0ce"]
+[ext_resource type="PackedScene" uid="uid://dj6dwsfftys3" path="res://Levels and menus/TestWorld.tscn" id="2_iisih"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_br0ce")
+Level = ExtResource("2_iisih")
+
+[node name="Host" type="Button" parent="."]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 150.0
+offset_right = 113.0
+offset_bottom = 158.0
+scale = Vector2(2.6, 2.6)
+text = "Host
+"
+
+[node name="Join" type="Button" parent="."]
+offset_left = 105.0
+offset_top = 239.0
+offset_right = 149.0
+offset_bottom = 270.0
+scale = Vector2(2.6, 2.6)
+text = "Join
+"
+
+[node name="Play" type="Button" parent="."]
+offset_left = 105.0
+offset_top = 332.0
+offset_right = 149.0
+offset_bottom = 363.0
+scale = Vector2(2.6, 2.6)
+text = "Play
+"
+
+[connection signal="pressed" from="Host" to="." method="OnHostPressed"]
+[connection signal="pressed" from="Join" to="." method="OnJoinPressed"]
+[connection signal="pressed" from="Play" to="." method="OnPlayPressed"]
