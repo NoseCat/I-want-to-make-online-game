@@ -11,11 +11,20 @@ size = Vector2(61, 57)
 radius = 67.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_gowb2"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath("NoseCat:flip_h")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:SyncPos")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("GunRoot:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("GunRoot:ammo")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
-[node name="PlayerRoot" type="Node2D"]
+[node name="PlayerRoot" type="Node2D" groups=["Players"]]
 
 [node name="CharacterBody" type="CharacterBody2D" parent="."]
 texture_filter = 1

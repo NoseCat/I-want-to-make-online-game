@@ -49,3 +49,12 @@ position = Vector2(-410, -90)
 
 [node name="1" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
 position = Vector2(295, 220)
+
+[node name="2" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(145, 212)
+
+[node name="3" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(-597, 216)
+
+[node name="4" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(-248, 188)

@@ -16,6 +16,8 @@ public partial class CharacterBody : CharacterBody2D
 	public bool FirstJump = false;
 	public bool SecondJump = false;
 
+	private Vector2 SyncPos = new Vector2(0,0);
+
     public override void _Ready()
     {
 		GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(int.Parse(GetNode<Node2D>("..").Name));
@@ -34,9 +36,16 @@ public partial class CharacterBody : CharacterBody2D
 	{
 		if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId())
 		{
+			GetNode<GunRoot>("GunRoot").IsOwned = true;
 			Vector2 velocity = Velocity;
 			
-			//Gravity
+		//flip sprite
+			if(GetGlobalMousePosition().X < GlobalPosition.X && GetNode<Sprite2D>("NoseCat").FlipH)
+				GetNode<Sprite2D>("NoseCat").FlipH = false;
+			if(GetGlobalMousePosition().X >= GlobalPosition.X && !GetNode<Sprite2D>("NoseCat").FlipH)
+				GetNode<Sprite2D>("NoseCat").FlipH = true;
+
+		//Gravity
 			if (!IsOnFloor())
 			{
 				float JumpControl = gravity;
@@ -61,7 +70,7 @@ public partial class CharacterBody : CharacterBody2D
 				velocity.Y = JumpVelocity;
 			}
 
-			//Jump
+		//Jump
 			if (IsOnFloor())
 			{
 				CoyoteFix = true;
@@ -88,7 +97,7 @@ public partial class CharacterBody : CharacterBody2D
 				velocity.Y = JumpVelocity;
 			}
 
-			//Gorizontal movement
+		//Gorizontal movement
 			float direction = Input.GetActionStrength("Right") - Input.GetActionStrength("Left");
 			velocity.X += direction * Speed;
 			if(Math.Abs(velocity.X) >= SpeedLimit)
@@ -97,11 +106,18 @@ public partial class CharacterBody : CharacterBody2D
 			if (velocity.X != 0 && direction == 0)
 				velocity.X -= Math.Sign(velocity.X) * friction;
 
-			//other
+		//other
 			//GetNode<Label>("Label").Text ="FirstJump " + FirstJump + "\nSecondJump " + SecondJump + "\nIsOnFloor() " + IsOnFloor();//"Coyote: " + Coyote + "\nCoyoteFix: " + CoyoteFix;
-
 			Velocity = velocity;
 			MoveAndSlide();
+		//Gun
+			
+
+		//online sync
+			SyncPos = GlobalPosition;
+		}else{
+			//GlobalPosition = GlobalPosition.Lerp(SyncPos, .5f);
+			GlobalPosition = SyncPos;
 		}
 	}	
 }

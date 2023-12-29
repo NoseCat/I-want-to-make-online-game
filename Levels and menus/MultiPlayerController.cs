@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class MultiPlayerController : Control
 {
@@ -72,6 +73,15 @@ public partial class MultiPlayerController : Control
 
 	public void PlayerDisconnected(long id)
 	{
+		GameManager.Players.Remove(GameManager.Players.Where( i => i.Id == id).First<PlayerInfo>()); //????????????
+		var players = GetTree().GetNodesInGroup("Players");
+		foreach (var item in players)
+		{
+			if(item.Name == id.ToString())
+			{
+				item.QueueFree();
+			}
+		}
 		GD.Print($"Player <{id}> disconected.");
 	}
 

@@ -3,6 +3,8 @@ using System;
 
 public partial class GunRoot : Node2D
 {
+	public bool IsOwned = false;
+
 	public bool reloading = false;
 	public Label label;
 	public AnimationPlayer Anima;
@@ -22,6 +24,7 @@ public partial class GunRoot : Node2D
 	public override void _Ready()
 	{
 		//GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(int.Parse(GetNode<Node2D>("..").Name));
+		
 		label = GetNode<Label>("Gun/Label");
 		Anima = GetNode<AnimationPlayer>("AnimationPlayer");
 		Parent = GetNode<Node2D>("..");
@@ -34,28 +37,30 @@ public partial class GunRoot : Node2D
 
 	private void _on_area_2d_mouse_entered()
 	{
-		Sprite.FlipH = true;
+		if(IsOwned)
+			Sprite.FlipH = true;
 	}
 
 	private void _on_area_2d_mouse_exited()
-	{
-		Sprite.FlipH = false;
+	{	if(IsOwned)
+			Sprite.FlipH = false;
 	}
 
 	private void AnimaFinish(string anim_name)
 	{
-		if(anim_name == "Reload" || anim_name == "Reload2")
-		{
-			ammo = max_ammo;
-			reloading = false;
-			label.Text = ammo + " / " + max_ammo;
-		}
+		if(IsOwned)
+			if(anim_name == "Reload" || anim_name == "Reload2")
+			{
+				ammo = max_ammo;
+				reloading = false;
+				label.Text = ammo + " / " + max_ammo;
+			}
 	}
 	
 	public override void _Process(double delta)
 	{
-//		if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId())
-//		{
+		if(IsOwned)
+		{
 			if ( (ammo <= 0 && Input.IsActionPressed("click") || Input.IsActionJustPressed("Reload")) && !reloading)
 			{
 				reloading = true;
@@ -110,6 +115,6 @@ public partial class GunRoot : Node2D
 				ShotProgress++;
 			else
 				ShotProgress = 0;
-//		}
+		}
 	}
 }
