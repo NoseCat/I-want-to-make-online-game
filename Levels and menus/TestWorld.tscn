@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dj6dwsfftys3"]
+[gd_scene load_steps=7 format=3 uid="uid://dj6dwsfftys3"]
 
 [ext_resource type="PackedScene" uid="uid://t8dsuw8bg6d1" path="res://Entity Scenes/PlayerRoot.tscn" id="1_13vlq"]
+[ext_resource type="Script" path="res://Levels and menus/SceneManager.cs" id="1_ux4wc"]
 [ext_resource type="Texture2D" uid="uid://wrpfncvlf11i" path="res://Sprites/Walls/Rock.png" id="2_kmpj4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0pkaq"]
@@ -22,8 +23,8 @@ sources/0 = SubResource("TileSetAtlasSource_0pkaq")
 size = Vector2(20, 572)
 
 [node name="TestWorld" type="Node"]
-
-[node name="PlayerRoot" parent="." instance=ExtResource("1_13vlq")]
+script = ExtResource("1_ux4wc")
+player = ExtResource("1_13vlq")
 
 [node name="TileMap" type="TileMap" parent="."]
 texture_filter = 1
@@ -40,3 +41,11 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(-4, -13)
 shape = SubResource("RectangleShape2D_aj2om")
+
+[node name="Spawners" type="Node2D" parent="."]
+
+[node name="0" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(-410, -90)
+
+[node name="1" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(295, 220)

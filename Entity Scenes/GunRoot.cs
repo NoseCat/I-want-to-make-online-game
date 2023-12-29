@@ -21,6 +21,7 @@ public partial class GunRoot : Node2D
 	public uint ammo = 16;
 	public override void _Ready()
 	{
+		//GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(int.Parse(GetNode<Node2D>("..").Name));
 		label = GetNode<Label>("Gun/Label");
 		Anima = GetNode<AnimationPlayer>("AnimationPlayer");
 		Parent = GetNode<Node2D>("..");
@@ -53,59 +54,62 @@ public partial class GunRoot : Node2D
 	
 	public override void _Process(double delta)
 	{
-		if ( (ammo <= 0 && Input.IsActionPressed("click") || Input.IsActionJustPressed("Reload")) && !reloading)
-		{
-			reloading = true;
-			Anima.Play("RESET");
-			Anima.Play(Sprite.FlipV ? "Reload" : "Reload2");
-			//Anima.Play("Reload");
-		}
+//		if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId())
+//		{
+			if ( (ammo <= 0 && Input.IsActionPressed("click") || Input.IsActionJustPressed("Reload")) && !reloading)
+			{
+				reloading = true;
+				Anima.Play("RESET");
+				Anima.Play(Sprite.FlipV ? "Reload" : "Reload2");
+				//Anima.Play("Reload");
+			}
 
-		//gun rotation
-		Mouse = GetGlobalMousePosition();
-		LookAt(Mouse);
-		if(Mouse.X < Parent.GlobalPosition.X && !Sprite.FlipV)
-		{
-			label.Rotation += (float)Math.PI;
-			label.Position *= new Vector2(1,-1);
-			label.Position += new Vector2(47/2,0);
-			Sprite.FlipV = true;
-			GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1);//= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
-			Marker = Marker2;
-		}
-		if(Mouse.X >= Parent.GlobalPosition.X && Sprite.FlipV)
-		{
-			label.Rotation -= (float)Math.PI;
-			label.Position *= new Vector2(1,-1);
-			label.Position -= new Vector2(47/2,0);
-			Sprite.FlipV = false;
-			GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1); //= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
-			Marker = Marker1;
-		}
+			//gun rotation
+			Mouse = GetGlobalMousePosition();
+			LookAt(Mouse);
+			if(Mouse.X < Parent.GlobalPosition.X && !Sprite.FlipV)
+			{
+				label.Rotation += (float)Math.PI;
+				label.Position *= new Vector2(1,-1);
+				label.Position += new Vector2(47/2,0);
+				Sprite.FlipV = true;
+				GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1);//= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
+				Marker = Marker2;
+			}
+			if(Mouse.X >= Parent.GlobalPosition.X && Sprite.FlipV)
+			{
+				label.Rotation -= (float)Math.PI;
+				label.Position *= new Vector2(1,-1);
+				label.Position -= new Vector2(47/2,0);
+				Sprite.FlipV = false;
+				GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1); //= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
+				Marker = Marker1;
+			}
 
-		//shot	
-		if(ShotProgress == ShotSpeed)
-		{
-			ShotProgress = 0;
-		}
+			//shot	
+			if(ShotProgress == ShotSpeed)
+			{
+				ShotProgress = 0;
+			}
 
-		if(ShotProgress == 0 && ammo > 0 && !reloading && Input.IsActionPressed("click"))
-		{
-			ammo--;
-			label.Text = ammo + " / " + max_ammo;
-			Anima.Play("RESET");
-			Anima.Play(Sprite.FlipV ? "Shot2" : "Shot");
-			RigidBody2D bullet = BulletScene.Instantiate<RigidBody2D>();
-			bullet.GlobalPosition = Marker.GlobalPosition;
-			((boolet)bullet).BackMarker = GetNode<Marker2D>("Marker2D3").GlobalPosition;
-			//((boolet)bullet).SpriteRotation = GlobalRotation;
-			((boolet)bullet).motion = Mouse - bullet.Position; //this took ages...
-			((boolet)bullet).speed = BulletSpeed;
-			GetTree().Root.AddChild(bullet);
-		}
-		if (Input.IsActionPressed("click"))
-			ShotProgress++;
-		else
-			ShotProgress = 0;
+			if(ShotProgress == 0 && ammo > 0 && !reloading && Input.IsActionPressed("click"))
+			{
+				ammo--;
+				label.Text = ammo + " / " + max_ammo;
+				Anima.Play("RESET");
+				Anima.Play(Sprite.FlipV ? "Shot2" : "Shot");
+				RigidBody2D bullet = BulletScene.Instantiate<RigidBody2D>();
+				bullet.GlobalPosition = Marker.GlobalPosition;
+				((boolet)bullet).BackMarker = GetNode<Marker2D>("Marker2D3").GlobalPosition;
+				//((boolet)bullet).SpriteRotation = GlobalRotation;
+				((boolet)bullet).motion = Mouse - bullet.Position; //this took ages...
+				((boolet)bullet).speed = BulletSpeed;
+				GetTree().Root.AddChild(bullet);
+			}
+			if (Input.IsActionPressed("click"))
+				ShotProgress++;
+			else
+				ShotProgress = 0;
+//		}
 	}
 }

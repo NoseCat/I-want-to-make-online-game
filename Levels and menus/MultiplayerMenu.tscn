@@ -24,6 +24,7 @@ text = "Host
 "
 
 [node name="Join" type="Button" parent="."]
+layout_mode = 0
 offset_left = 105.0
 offset_top = 239.0
 offset_right = 149.0
@@ -33,6 +34,7 @@ text = "Join
 "
 
 [node name="Play" type="Button" parent="."]
+layout_mode = 0
 offset_left = 105.0
 offset_top = 332.0
 offset_right = 149.0
@@ -40,6 +42,21 @@ offset_bottom = 363.0
 scale = Vector2(2.6, 2.6)
 text = "Play
 "
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 459.0
+offset_top = 147.0
+offset_right = 1031.0
+offset_bottom = 191.0
+
+[node name="Name" type="Label" parent="LineEdit"]
+layout_mode = 0
+offset_top = -59.0
+offset_right = 47.0
+offset_bottom = -36.0
+scale = Vector2(2.44, 2.44)
+text = "Name"
 
 [connection signal="pressed" from="Host" to="." method="OnHostPressed"]
 [connection signal="pressed" from="Join" to="." method="OnJoinPressed"]

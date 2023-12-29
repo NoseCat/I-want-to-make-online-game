@@ -26,16 +26,18 @@ public partial class MultiPlayerController : Control
 	public void HostGame()
 	{
 		_peer = new ENetMultiplayerPeer();
-		var status = _peer.CreateServer(_port, 5);
+		var status = _peer.CreateServer(_port, 10);
 		if (status != Error.Ok)
 		{
 			GD.PrintErr("Server could not be created:");
 			GD.PrintErr($"Port: {_port}");
+			GD.PrintErr(status.ToString());
 			return;
 		}
 		_peer.Host.Compress(ENetConnection.CompressionMode.RangeCoder);
 		Multiplayer.MultiplayerPeer = _peer;
 		GD.Print("Server started SUCCESSFULLY.");
+		SendPlayerInformation(GetNode<LineEdit>("LineEdit").Text, 1);
 		GD.Print("Waiting for players to connect ...");
 	}
 
@@ -53,7 +55,7 @@ public partial class MultiPlayerController : Control
 		GD.Print("Created client.");
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void LoadGame()
 	{
 		Node level = Level.Instantiate<Node>();
@@ -88,16 +90,24 @@ public partial class MultiPlayerController : Control
 		GD.Print(_playerId, "Sending player information to server.");
 		GD.Print(_playerId, $"Id: {_playerId}");
 
-		RpcId(1, "SendPlayerInformation", _playerId);
+		RpcId(1, "SendPlayerInformation", GetNode<LineEdit>("LineEdit").Text, _playerId);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void SendPlayerInformation(int id)
+	private void SendPlayerInformation(string name, int id)
 	{
-		//if //(GameManager.Player1id == 0)
-		//{
-
-		//}
+		PlayerInfo playerInfo = new PlayerInfo(){Name = name, Id = id};
+		if(!GameManager.Players.Contains(playerInfo))
+		{
+			GameManager.Players.Add(playerInfo);
+		}
+		if(Multiplayer.IsServer())
+		{
+			foreach(var item in GameManager.Players)
+			{
+				Rpc("SendPlayerInformation", item.Name, item.Id);
+			}
+		}
 	}
 	#endregion
 
@@ -114,12 +124,7 @@ public partial class MultiPlayerController : Control
 
 	public void OnPlayPressed()
 	{
-		LoadGame();
 		Rpc("LoadGame");
 	}
 	#endregion
-	/*public override void _Process(double delta)
-	{
-
-	}*/
 }
