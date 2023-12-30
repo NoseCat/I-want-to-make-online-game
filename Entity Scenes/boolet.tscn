@@ -1,16 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://7ajymaupfls2"]
+[gd_scene load_steps=7 format=3 uid="uid://7ajymaupfls2"]
 
 [ext_resource type="Script" path="res://Entity Scenes/boolet.cs" id="1_aqs5e"]
 [ext_resource type="PackedScene" uid="uid://b5g35sj8ro1ie" path="res://Entity Scenes/BulletTrace.tscn" id="2_owyed"]
 [ext_resource type="Texture2D" uid="uid://dfekc8wplfe53" path="res://Sprites/Guns/Bullet.png" id="2_yl836"]
 [ext_resource type="Texture2D" uid="uid://ttei7bgu30l5" path="res://Sprites/Guns/Bullet2.png" id="3_y4dan"]
+[ext_resource type="Texture2D" uid="uid://cnmkecs0hw6ys" path="res://Sprites/Walls/2d_lights_and_shadows_neutral_point_light.webp" id="5_nrger"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xxwns"]
 radius = 8.0
 
 [node name="Boolet" type="RigidBody2D"]
-collision_layer = 2
-collision_mask = 2
 gravity_scale = 0.0
 linear_damp_mode = 1
 script = ExtResource("1_aqs5e")
@@ -41,5 +40,11 @@ autostart = true
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(-16, 0)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(0.5, 0.5)
+energy = 0.5
+shadow_enabled = true
+texture = ExtResource("5_nrger")
 
 [connection signal="timeout" from="LifeTime" to="." method="_on_life_time_timeout"]

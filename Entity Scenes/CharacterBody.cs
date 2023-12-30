@@ -3,7 +3,9 @@ using System;
 
 public partial class CharacterBody : CharacterBody2D
 {
-	public string name = "NoseCat"; 
+	public string playername = "NoseCat"; 
+	
+	public int Health = 15;
 
 	public const float Speed = 100.0f;
 	public const float SpeedLimit = 750.0f;
@@ -34,6 +36,11 @@ public partial class CharacterBody : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		GetNode<Label>("Label").Text = Health + " / 15";
+		if(Health <= 0)
+		{
+			QueueFree();
+		}
 		if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId())
 		{
 			GetNode<Camera2D>("Camera2D").Enabled = true;

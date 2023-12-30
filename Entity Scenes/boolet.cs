@@ -33,15 +33,15 @@ public partial class boolet : RigidBody2D
 		//LifeTime = GetNode<Timer>("LifeTime");
 	}
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	void DeleteBullet()
 	{
-		//play effects;
 		QueueFree();
 	}
 
 	public void _on_life_time_timeout()
 	{
-		DeleteBullet();
+		Rpc("DeleteBullet");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -49,6 +49,14 @@ public partial class boolet : RigidBody2D
 		var collisionInfo = MoveAndCollide(motion.Normalized() * speed * (float)delta);
 		if(collisionInfo != null)
 		{
+			//GD.Print(collisionInfo.GetCollider());
+			if (collisionInfo.GetCollider() is CharacterBody2D)
+			{
+				GD.Print(((CharacterBody)collisionInfo.GetCollider()).Health);
+				((CharacterBody)collisionInfo.GetCollider()).Health--;
+				GD.Print(((CharacterBody)collisionInfo.GetCollider()).Health);
+				Rpc("DeleteBullet");
+			}
 			motion = motion.Bounce(collisionInfo.GetNormal());
 			//Sprite.LookAt(motion);
 			/*if(FirstBounce)
@@ -62,6 +70,6 @@ public partial class boolet : RigidBody2D
 			bounces++;
 		}
 		if(bounces >= bounce_limit)
-			DeleteBullet();
+			Rpc("DeleteBullet");
 	}
 }

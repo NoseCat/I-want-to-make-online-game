@@ -26,8 +26,8 @@ public partial class GunRoot : Node2D
 	public bool Shoot = false;
 	[Export] PackedScene BulletScene;
 	[Export] float BulletSpeed = 300;
-	[Export] uint max_ammo = 16;
-	public uint ammo = 16;
+	[Export] uint max_ammo = 9;
+	public uint ammo = 9;
 	public override void _Ready()
 	{
 		//GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(int.Parse(GetNode<Node2D>("..").Name));

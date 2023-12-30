@@ -95,6 +95,7 @@ _data = {
 [node name="GunRoot" type="Node2D"]
 scale = Vector2(2, 2)
 script = ExtResource("1_xyjma")
+ShotSpeed = 20
 BulletScene = ExtResource("2_dsv3f")
 BulletSpeed = 1000.0
 
@@ -110,7 +111,7 @@ offset_top = -19.0
 offset_right = 57.5
 offset_bottom = 4.0
 scale = Vector2(0.42, 0.42)
-text = " 16 / 16"
+text = "9 / 9"
 horizontal_alignment = 2
 metadata/_edit_use_anchors_ = true
 

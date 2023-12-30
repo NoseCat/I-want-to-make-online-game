@@ -13,6 +13,7 @@ public partial class SceneManager : Node
 		{
 			//CharacterBody here is the name of the class and nor CharacterBody2D
 			Node2D currentPlayer = player.Instantiate<Node2D>();
+			//((CharacterBody)currentPlayer).playername = item.Name;
 			currentPlayer.Name = item.Id.ToString();
 			AddChild(currentPlayer);
 			foreach (Marker2D spawnpoint in GetTree().GetNodesInGroup("SpawnPoints"))

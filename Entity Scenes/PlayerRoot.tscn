@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://t8dsuw8bg6d1"]
+[gd_scene load_steps=7 format=3 uid="uid://t8dsuw8bg6d1"]
 
 [ext_resource type="Texture2D" uid="uid://bvnjnadightog" path="res://Sprites/Characters/NoseCat.png" id="1_lqkeb"]
 [ext_resource type="Script" path="res://Entity Scenes/CharacterBody.cs" id="1_tgmwh"]
@@ -30,6 +30,9 @@ properties/6/path = NodePath("GunRoot:syncLabelRotation")
 properties/6/spawn = true
 properties/6/replication_mode = 1
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_wvuai"]
+polygon = PackedVector2Array(-30.5, -28.5, 30.5, -28.5, 30.5, 28.5, -30.5, 28.5)
+
 [node name="PlayerRoot" type="Node2D" groups=["Players"]]
 
 [node name="CharacterBody" type="CharacterBody2D" parent="."]
@@ -39,6 +42,7 @@ floor_stop_on_slope = false
 script = ExtResource("1_tgmwh")
 
 [node name="NoseCat" type="Sprite2D" parent="CharacterBody"]
+z_index = 4
 texture = ExtResource("1_lqkeb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody"]
@@ -62,6 +66,19 @@ scale = Vector2(0.9, 0.9)
 enabled = false
 process_callback = 0
 position_smoothing_enabled = true
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="CharacterBody"]
+occluder = SubResource("OccluderPolygon2D_wvuai")
+
+[node name="Label" type="Label" parent="CharacterBody"]
+offset_left = -35.0
+offset_top = -61.0
+offset_right = 35.0
+offset_bottom = -12.0
+text = "Nose Cat
+16 / 16"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="timeout" from="CharacterBody/JumpBuffer" to="CharacterBody" method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="CharacterBody/CoyoteJump" to="CharacterBody" method="_on_coyote_jump_timeout"]
