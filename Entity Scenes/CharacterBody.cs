@@ -36,6 +36,8 @@ public partial class CharacterBody : CharacterBody2D
 	{
 		if(GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").GetMultiplayerAuthority() == Multiplayer.GetUniqueId())
 		{
+			GetNode<Camera2D>("Camera2D").Enabled = true;
+
 			GetNode<GunRoot>("GunRoot").IsOwned = true;
 			Vector2 velocity = Velocity;
 			

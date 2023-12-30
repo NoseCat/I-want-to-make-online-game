@@ -5,6 +5,13 @@ public partial class GunRoot : Node2D
 {
 	public bool IsOwned = false;
 
+	public bool syncFlipV = false;
+	public Vector2 syncLabelPosition = new Vector2(1,-18);
+	public float syncLabelRotation = 0;
+	//public Vector2 syncMarkerPosition = new Vector2(0,0);
+	//public Vector2 syncBackMarkerPosition = new Vector2(0,0);
+
+	public Marker2D BackMarker;
 	public bool reloading = false;
 	public Label label;
 	public AnimationPlayer Anima;
@@ -24,7 +31,8 @@ public partial class GunRoot : Node2D
 	public override void _Ready()
 	{
 		//GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetMultiplayerAuthority(int.Parse(GetNode<Node2D>("..").Name));
-		
+		BackMarker = GetNode<Marker2D>("Marker2D3");
+
 		label = GetNode<Label>("Gun/Label");
 		Anima = GetNode<AnimationPlayer>("AnimationPlayer");
 		Parent = GetNode<Node2D>("..");
@@ -35,86 +43,110 @@ public partial class GunRoot : Node2D
 		Marker = Marker1;
 	}
 
-	private void _on_area_2d_mouse_entered()
-	{
-		if(IsOwned)
-			Sprite.FlipH = true;
-	}
-
-	private void _on_area_2d_mouse_exited()
-	{	if(IsOwned)
-			Sprite.FlipH = false;
-	}
-
 	private void AnimaFinish(string anim_name)
 	{
-		if(IsOwned)
-			if(anim_name == "Reload" || anim_name == "Reload2")
-			{
-				ammo = max_ammo;
-				reloading = false;
-				label.Text = ammo + " / " + max_ammo;
-			}
+		if(anim_name == "Reload" || anim_name == "Reload2")
+		{
+			reloading = false;
+			label.Text = ammo + " / " + max_ammo;
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void Reload()
+	{
+		reloading = true;
+		Anima.Play("RESET");
+		Anima.Play(Sprite.FlipV ? "Reload" : "Reload2");
+		ammo = max_ammo;
+		
+		//Anima.Play("Reload");
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void SpawnBullet()
+	{
+		ammo--;
+		label.Text = ammo + " / " + max_ammo;
+		Anima.Play("RESET");
+		Anima.Play(Sprite.FlipV ? "Shot2" : "Shot");
+		RigidBody2D bullet = BulletScene.Instantiate<RigidBody2D>();
+		bullet.GlobalPosition = Marker.GlobalPosition;
+		((boolet)bullet).BackMarker = BackMarker.GlobalPosition;
+		//((boolet)bullet).SpriteRotation = GlobalRotation;
+		//((boolet)bullet).motion = Mouse - bullet.Position; //this took ages...
+		((boolet)bullet).motion = Marker.GlobalPosition - BackMarker.GlobalPosition;
+		((boolet)bullet).speed = BulletSpeed;
+		//GetTree().Root.AddChild(bullet);
+		GetTree().Root.AddChild(bullet);
 	}
 	
 	public override void _Process(double delta)
 	{
+		//gun rotation
+		Mouse = GetGlobalMousePosition();
+		if (Mouse.X < Parent.GlobalPosition.X && !Sprite.FlipV)
+		{
+			label.Rotation += (float)Math.PI;
+			label.Position *= new Vector2(1, -1);
+			label.Position += new Vector2(47 / 2, 0);
+			Sprite.FlipV = true;
+		}
+		if (Mouse.X >= Parent.GlobalPosition.X && Sprite.FlipV)
+		{
+			label.Rotation -= (float)Math.PI;
+			label.Position *= new Vector2(1, -1);
+			label.Position -= new Vector2(47 / 2, 0);
+			Sprite.FlipV = false;
+	
+		}
+		if(GetNode<Sprite2D>("../NoseCat").FlipH) //&& Marker != Marker2)
+		{
+			BackMarker = GetNode<Marker2D>("Marker2D3");//= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
+			Marker = Marker1;
+		}
+		if(!GetNode<Sprite2D>("../NoseCat").FlipH) //&& Marker != Marker1)
+		{
+			BackMarker = GetNode<Marker2D>("Marker2D4"); //= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
+			Marker = Marker2;
+		}
+		//GD.Print(BackMarker.Position);
+		//GD.Print(Marker.Position);
 		if(IsOwned)
 		{
-			if ( (ammo <= 0 && Input.IsActionPressed("click") || Input.IsActionJustPressed("Reload")) && !reloading)
+			if ((ammo <= 0 && Input.IsActionPressed("click") || Input.IsActionJustPressed("Reload")) && !reloading)
 			{
-				reloading = true;
-				Anima.Play("RESET");
-				Anima.Play(Sprite.FlipV ? "Reload" : "Reload2");
-				//Anima.Play("Reload");
+				Rpc("Reload");
 			}
-
-			//gun rotation
-			Mouse = GetGlobalMousePosition();
-			LookAt(Mouse);
-			if(Mouse.X < Parent.GlobalPosition.X && !Sprite.FlipV)
-			{
-				label.Rotation += (float)Math.PI;
-				label.Position *= new Vector2(1,-1);
-				label.Position += new Vector2(47/2,0);
-				Sprite.FlipV = true;
-				GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1);//= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
-				Marker = Marker2;
-			}
-			if(Mouse.X >= Parent.GlobalPosition.X && Sprite.FlipV)
-			{
-				label.Rotation -= (float)Math.PI;
-				label.Position *= new Vector2(1,-1);
-				label.Position -= new Vector2(47/2,0);
-				Sprite.FlipV = false;
-				GetNode<Marker2D>("Marker2D3").Position *= new Vector2(1,-1); //= new Vector2(GetNode<Marker2D>("Marker2D3").Position.X, -GetNode<Marker2D>("Marker2D3").Position.Y);
-				Marker = Marker1;
-			}
-
 			//shot	
-			if(ShotProgress == ShotSpeed)
+			if (ShotProgress == ShotSpeed)
 			{
 				ShotProgress = 0;
 			}
 
-			if(ShotProgress == 0 && ammo > 0 && !reloading && Input.IsActionPressed("click"))
+			if (ShotProgress == 0 && ammo > 0 && !reloading && Input.IsActionPressed("click"))
 			{
-				ammo--;
-				label.Text = ammo + " / " + max_ammo;
-				Anima.Play("RESET");
-				Anima.Play(Sprite.FlipV ? "Shot2" : "Shot");
-				RigidBody2D bullet = BulletScene.Instantiate<RigidBody2D>();
-				bullet.GlobalPosition = Marker.GlobalPosition;
-				((boolet)bullet).BackMarker = GetNode<Marker2D>("Marker2D3").GlobalPosition;
-				//((boolet)bullet).SpriteRotation = GlobalRotation;
-				((boolet)bullet).motion = Mouse - bullet.Position; //this took ages...
-				((boolet)bullet).speed = BulletSpeed;
-				GetTree().Root.AddChild(bullet);
+				Rpc("SpawnBullet");
 			}
 			if (Input.IsActionPressed("click"))
 				ShotProgress++;
 			else
 				ShotProgress = 0;
+
+			//syncBackMarkerPosition = BackMarker.Position;
+			syncLabelRotation = label.Rotation;
+			syncLabelPosition = label.Position;
+			syncFlipV = Sprite.FlipV;
+			//syncMarkerPosition = Marker.Position;
+			LookAt(Mouse);
+		}
+		else
+		{
+			//BackMarker.Position = syncBackMarkerPosition;
+			label.Rotation = syncLabelRotation;
+			label.Position = syncLabelPosition;
+			Sprite.FlipV = syncFlipV;
+			//Marker.Position = syncMarkerPosition;
 		}
 	}
 }

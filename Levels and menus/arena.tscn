@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://3k1t3i5macgn"]
+
+[ext_resource type="Script" path="res://Levels and menus/SceneManager.cs" id="1_pk4tr"]
+[ext_resource type="PackedScene" uid="uid://t8dsuw8bg6d1" path="res://Entity Scenes/PlayerRoot.tscn" id="2_sfnb7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h33s4"]
+size = Vector2(3000, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8dy60"]
+size = Vector2(150, 1381)
+
+[node name="Arena" type="Node"]
+script = ExtResource("1_pk4tr")
+player = ExtResource("2_sfnb7")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+ignore_rotation = false
+enabled = false
+
+[node name="Walls" type="StaticBody2D" parent="."]
+collision_layer = 15
+collision_mask = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls"]
+position = Vector2(0, 648)
+rotation = -3.14159
+shape = SubResource("RectangleShape2D_h33s4")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls"]
+position = Vector2(0, -648)
+rotation = -3.14159
+shape = SubResource("RectangleShape2D_h33s4")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Walls"]
+position = Vector2(1152, 0)
+shape = SubResource("RectangleShape2D_8dy60")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Walls"]
+position = Vector2(-1152, 0)
+shape = SubResource("RectangleShape2D_8dy60")
+
+[node name="Polygon2D" type="Polygon2D" parent="Walls"]
+color = Color(0.290196, 0.313726, 0.341176, 1)
+invert_enabled = true
+polygon = PackedVector2Array(-1077, -598, 1077, -598, 1077, 598, -1077, 598)
+
+[node name="Spawners" type="Node2D" parent="."]
+
+[node name="0" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(-667, -332)
+
+[node name="1" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(665, -331)
+
+[node name="2" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(836, 435)
+
+[node name="3" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]
+position = Vector2(-782, 450)
+
+[node name="4" type="Marker2D" parent="Spawners" groups=["SpawnPoints"]]

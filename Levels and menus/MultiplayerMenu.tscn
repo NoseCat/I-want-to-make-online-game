@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://gqclmyo2obb4"]
 
 [ext_resource type="Script" path="res://Levels and menus/MultiPlayerController.cs" id="1_br0ce"]
-[ext_resource type="PackedScene" uid="uid://dj6dwsfftys3" path="res://Levels and menus/TestWorld.tscn" id="2_iisih"]
+[ext_resource type="PackedScene" uid="uid://3k1t3i5macgn" path="res://Levels and menus/arena.tscn" id="2_7wjv2"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -11,7 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_br0ce")
-Level = ExtResource("2_iisih")
+Level = ExtResource("2_7wjv2")
 
 [node name="Host" type="Button" parent="."]
 layout_mode = 0
